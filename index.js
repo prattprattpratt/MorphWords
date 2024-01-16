@@ -23,21 +23,31 @@ window.onload = () => {
   }
   lastWordElement.innerHTML = lastWordNewHTML
 
+  checkWordIsValid = () => {
+    const middleWordsContainer = document.getElementById('middle-words')
+    const activeWordElement = middleWordsContainer.children[middleWordsContainer.childElementCount - 1]
+    const previousWordElement = middleWordsContainer.childElementCount > 1 
+      ? middleWordsContainer.children[middleWordsContainer.childElementCount - 2]
+      : document.getElementById('word-1')
+    
+    return Math.abs(previousWordElement.childElementCount - (activeWordElement.childElementCount - 2)) < 2
+  }
+
   onLetterInput = (e) => {
     e.preventDefault()
     const activeWordElement = e.target.parentNode
     const middleWordsContainer = document.getElementById('middle-words')
     if (e.key === 'Backspace') {
-      if (activeWordElement.children.length === 1 && middleWordsContainer.children.length === 1) {
+      if (activeWordElement.childElementCount === 1 && middleWordsContainer.childElementCount === 1) {
         return
       }
       const newInputElement = '<input onkeydown="onLetterInput(event)" class="letter" />'
       var wordElementNewHTML = ''
-      if (activeWordElement.children.length === 3) {
+      if (activeWordElement.childElementCount === 3) {
         wordElementNewHTML = Array.from(activeWordElement.children).map((l, i) => {
           if (l.tagName === 'INPUT' || l.classList.contains('press-enter-help-text')) {
             return ''
-          } else if (i === activeWordElement.children.length - 3) {
+          } else if (i === activeWordElement.childElementCount - 3) {
             return newInputElement
           } else {
             return l.outerHTML
@@ -47,7 +57,7 @@ window.onload = () => {
         wordElementNewHTML = Array.from(activeWordElement.children).map((l, i) => {
           if (l.tagName === 'INPUT') { // the last element
             return ''
-          } else if (i === activeWordElement.children.length - 3) { // the penultimate element
+          } else if (i === activeWordElement.childElementCount - 3) { // the penultimate element
             return newInputElement
           } else {
             return l.outerHTML
@@ -61,7 +71,7 @@ window.onload = () => {
       }
 
       if (wordElementNewHTML === '') {
-        const newActiveWordElement = middleWordsContainer.children[middleWordsContainer.children.length - 1]
+        const newActiveWordElement = middleWordsContainer.children[middleWordsContainer.childElementCount - 1]
         const newInputElement = `<input id="letter-${i + 1}" onkeydown="onLetterInput(event)" class="letter" />`
         const pressEnterHelpTextElement = '<span class="press-enter-help-text">Press enter to continue to the next word</span>'
         newActiveWordElement.innerHTML = newActiveWordElement.innerHTML + newInputElement + pressEnterHelpTextElement
@@ -80,7 +90,7 @@ window.onload = () => {
         }
       }).join('')
 
-      if (activeWordElement.children.length === 1) {
+      if (activeWordElement.childElementCount === 1) {
         const pressEnterHelpTextElement = '<span class="press-enter-help-text">Press enter to continue to the next word</span'
         wordElementNewHTML += pressEnterHelpTextElement
       }
@@ -88,7 +98,10 @@ window.onload = () => {
       activeWordElement.innerHTML = wordElementNewHTML
       document.querySelector('input').focus()
     } else if (e.key === 'Enter') {
-      if (activeWordElement.children.length === 1) {
+      if (activeWordElement.childElementCount === 1) {
+        return
+      }
+      if (!checkWordIsValid()) {
         return
       }
 
@@ -98,12 +111,12 @@ window.onload = () => {
         return el.outerHTML
       }).join('')
       const newWordElement = `
-        <div class="word" id="word-${middleWordsContainer.children.length + 2}">
+        <div class="word" id="word-${middleWordsContainer.childElementCount + 2}">
           <input id="letter-1" onkeydown="onLetterInput(event)" class="letter" />
         </div>
       `
       middleWordsContainer.innerHTML += newWordElement
-      middleWordsContainer.children[middleWordsContainer.children.length - 1].children[0].focus()
+      middleWordsContainer.children[middleWordsContainer.childElementCount - 1].children[0].focus()
     }
   }
 }
