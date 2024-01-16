@@ -29,7 +29,6 @@ window.onload = () => {
     const middleWordsContainer = document.getElementById('middle-words')
     if (e.key === 'Backspace') {
       if (activeWordElement.children.length === 1 && middleWordsContainer.children.length === 1) {
-        console.log('returning')
         return
       }
       const newInputElement = '<input onkeydown="onLetterInput(event)" class="letter" />'

@@ -30,6 +30,11 @@ input.letter {
   padding: 6px 25px 0;
 }
 
+#middle-words {
+  display: flex;
+  flex-direction: column;
+}
+
 .press-enter-help-text {
   width: 120px;
   margin: 6px;
